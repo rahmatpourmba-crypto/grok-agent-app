@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Grok Agent Controller</title>
+    
+    <!-- PWA & Mobile Web App Meta -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="GrokAgent">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <meta name="theme-color" content="#090d16">
+
+    <style>
+        :root {
+            --bg: #090d16;
+            --surface: rgba(22, 30, 46, 0.85);
+            --border: rgba(255, 255, 255, 0.08);
+            --accent: #38bdf8;
+            --accent-gradient: linear-gradient(135deg, #0ea5e9, #6366f1);
+            --text: #f8fafc;
+            --dim: #94a3b8;
+            --green: #10b981;
+            --red: #ef4444;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background: var(--bg); color: var(--text); padding-bottom: 50px; min-height: 100vh; }
+
+        header {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(9, 13, 22, 0.95);
+            backdrop-filter: blur(16px);
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 17px; }
+        .logo-tag { background: var(--accent-gradient); padding: 4px 10px; border-radius: 8px; font-size: 12px; }
+        .conn-pill { font-size: 12px; padding: 5px 12px; border-radius: 20px; display: flex; align-items: center; gap: 6px; }
+        .online { background: rgba(16, 185, 129, 0.12); color: var(--green); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .offline { background: rgba(239, 68, 68, 0.12); color: var(--red); border: 1px solid rgba(239, 68, 68, 0.3); }
+        .dot { width: 8px; height: 8px; border-radius: 50%; }
+        .dot-green { background: var(--green); box-shadow: 0 0 8px var(--green); }
+        .dot-red { background: var(--red); }
+
+        .container { padding: 16px; display: flex; flex-direction: column; gap: 16px; max-width: 600px; margin: 0 auto; }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .card-title { font-size: 14px; font-weight: 700; color: var(--text); }
+
+        /* Quick Actions Grid */
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .btn-action {
+            background: rgba(56, 189, 248, 0.08);
+            border: 1px solid rgba(56, 189, 248, 0.15);
+            color: var(--text);
+            border-radius: 14px;
+            padding: 14px 6px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        .btn-action:active { transform: scale(0.95); background: rgba(56, 189, 248, 0.25); }
+        .btn-action span.icon { font-size: 24px; }
+
+        /* Host Settings Box */
+        .settings-bar {
+            display: flex; gap: 8px; margin-top: 6px;
+        }
+        .settings-input {
+            flex: 1; background: rgba(0,0,0,0.4); border: 1px solid var(--border);
+            border-radius: 10px; padding: 10px 14px; color: var(--accent); font-size: 13px;
+            direction: ltr; outline: none; font-family: monospace;
+        }
+        .btn-save {
+            background: var(--accent-gradient); border: none; color: white;
+            padding: 0 16px; border-radius: 10px; font-weight: 600; font-size: 13px; cursor: pointer;
+        }
+
+        /* Stats Grid */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .stat-box { background: rgba(0,0,0,0.25); padding: 12px; border-radius: 12px; border: 1px solid var(--border); }
+        .stat-label { font-size: 11px; color: var(--dim); margin-bottom: 4px; }
+        .stat-val { font-size: 15px; font-weight: 700; color: var(--accent); }
+
+        /* Terminal box */
+        .term-wrap { display: flex; gap: 8px; margin-top: 10px; }
+        .term-input {
+            flex: 1; background: rgba(0,0,0,0.4); border: 1px solid var(--border);
+            border-radius: 10px; padding: 12px 14px; color: #38bdf8;
+            font-family: Consolas, monospace; font-size: 13px; direction: ltr; outline: none;
+        }
+        .term-btn {
+            background: #0284c7; border: none; color: white; padding: 0 16px;
+            border-radius: 10px; font-weight: 700; cursor: pointer;
+        }
+        .console-out {
+            margin-top: 10px; background: #030712; border-radius: 12px; padding: 14px;
+            color: #a5f3fc; font-family: Consolas, monospace; font-size: 12px;
+            direction: ltr; text-align: left; max-height: 250px; overflow-y: auto;
+            white-space: pre-wrap; border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .screen-img { width: 100%; border-radius: 12px; display: none; margin-top: 10px; border: 1px solid var(--border); }
+
+        .toast {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: #1e293b; color: white; padding: 10px 18px; border-radius: 20px;
+            font-size: 13px; border: 1px solid var(--border); box-shadow: 0 5px 25px rgba(0,0,0,0.6);
+            display: none; z-index: 200; white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <span class="logo-tag">Grok</span>
+            <span>کنترل کامپیوتر از گوشی</span>
+        </div>
+        <div id="connPill" class="conn-pill offline">
+            <span id="connDot" class="dot dot-red"></span>
+            <span id="connText">آفلاین</span>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Host Address Settings -->
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">🌐 آدرس اتصال به کامپیوتر</span>
+            </div>
+            <div class="settings-bar">
+                <input type="text" id="hostUrl" class="settings-input" value="http://172.25.189.99:5000">
+                <button class="btn-save" onclick="saveHost()">ذخیره</button>
+            </div>
+        </div>
+
+        <!-- 1-Tap Quick Actions -->
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">⚡ اقدامات سریع با یک لمس</span>
+            </div>
+            <div class="grid-3">
+                <button class="btn-action" onclick="fetchScreen()">
+                    <span class="icon">📸</span>
+                    <span>اسکرین‌شات دسکتاپ</span>
+                </button>
+                <button class="btn-action" onclick="fetchStats()">
+                    <span class="icon">📊</span>
+                    <span>وضعیت سیستم</span>
+                </button>
+                <button class="btn-action" onclick="runQuick('Get-Process | Sort-Object CPU -Descending | Select-Object -First 6 ProcessName, CPU, WorkingSet')">
+                    <span class="icon">⚙️</span>
+                    <span>تسک‌های فعال</span>
+                </button>
+                <button class="btn-action" onclick="runQuick('rundll32.exe user32.dll,LockWorkStation')">
+                    <span class="icon">🔒</span>
+                    <span>قفل ویندوز</span>
+                </button>
+                <button class="btn-action" onclick="runQuick('dir C:\\Users\\Admin\\.gemini\\antigravity\\scratch')">
+                    <span class="icon">📂</span>
+                    <span>پروژه‌ها</span>
+                </button>
+                <button class="btn-action" onclick="runQuick('git status')">
+                    <span class="icon">🐙</span>
+                    <span>وضعیت Git</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Screenshot Modal/View -->
+        <div class="card" id="screenCard" style="display:none;">
+            <div class="card-header">
+                <span class="card-title">📸 تصویر زنده از مانیتور کامپیوتر</span>
+                <button onclick="document.getElementById('screenCard').style.display='none'" style="background:none;border:none;color:var(--dim);font-size:18px;">✕</button>
+            </div>
+            <img id="screenImg" class="screen-img" alt="اسکرین‌شات دسکتاپ">
+        </div>
+
+        <!-- System Stats Display -->
+        <div class="card" id="statsCard">
+            <div class="card-header">
+                <span class="card-title">💻 وضعیت سخت‌افزار ویندوز</span>
+            </div>
+            <div class="grid-2">
+                <div class="stat-box">
+                    <div class="stat-label">فضای دیسک آزاد</div>
+                    <div class="stat-val" id="statDisk">در حال دریافت...</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">سیستم‌عامل</div>
+                    <div class="stat-val" id="statOS" style="font-size:13px;">Windows 11</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PowerShell Terminal Runner -->
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">⌨️ اجرای مستقیم فرامین شل (PowerShell)</span>
+            </div>
+            <div class="term-wrap">
+                <input type="text" id="termCmd" class="term-input" placeholder="دستور مورد نظر (مثلاً: dir یا ipconfig)..." onkeydown="if(event.key==='Enter') executeCommand()">
+                <button class="term-btn" onclick="executeCommand()">اجرا</button>
+            </div>
+            <div id="consoleOutput" class="console-out">نتیجه فرامین در اینجا نمایش داده می‌شود...</div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">پیام</div>
+
+    <script>
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js').catch(() => {});
+        }
+
+        function getHost() {
+            return localStorage.getItem('grok_host') || document.getElementById('hostUrl').value.trim();
+        }
+
+        function saveHost() {
+            const h = document.getElementById('hostUrl').value.trim();
+            localStorage.setItem('grok_host', h);
+            showToast('آدرس جدید ذخیره شد!');
+            fetchStats();
+        }
+
+        function showToast(text) {
+            const t = document.getElementById('toast');
+            t.innerText = text;
+            t.style.display = 'block';
+            setTimeout(() => { t.style.display = 'none'; }, 3000);
+        }
+
+        function setOnline(isOnline) {
+            const pill = document.getElementById('connPill');
+            const dot = document.getElementById('connDot');
+            const txt = document.getElementById('connText');
+            if (isOnline) {
+                pill.className = 'conn-pill online';
+                dot.className = 'dot dot-green';
+                txt.innerText = 'متصل';
+            } else {
+                pill.className = 'conn-pill offline';
+                dot.className = 'dot dot-red';
+                txt.innerText = 'عدم اتصال';
+            }
+        }
+
+        async function fetchStats() {
+            const host = getHost();
+            showToast('در حال بررسی اتصال به کامپیوتر...');
+            try {
+                const res = await fetch(host + '/api/stats', { mode: 'cors' });
+                const data = await res.json();
+                document.getElementById('statDisk').innerText = data.disk.free_gb + ' گیگابایت';
+                document.getElementById('statOS').innerText = data.os;
+                setOnline(true);
+                showToast('سیستم متصل و آماده است ✅');
+            } catch(e) {
+                setOnline(false);
+                showToast('کامپیوتر پاسخ نداد. آدرس را بررسی کنید');
+            }
+        }
+
+        async function fetchScreen() {
+            const host = getHost();
+            showToast('در حال ثبت تصویر دسکتاپ...');
+            try {
+                const card = document.getElementById('screenCard');
+                const img = document.getElementById('screenImg');
+                img.src = host + '/api/screenshot?t=' + Date.now();
+                img.onload = () => {
+                    card.style.display = 'block';
+                    img.style.display = 'block';
+                    setOnline(true);
+                    showToast('تصویر مانیتور کامپیوتر دریافت شد 📸');
+                };
+            } catch(e) {
+                showToast('خطا در دریافت اسکرین‌شات');
+            }
+        }
+
+        async function executeCommand(cmdStr) {
+            const host = getHost();
+            const input = document.getElementById('termCmd');
+            const cmd = cmdStr || input.value.trim();
+            if (!cmd) return;
+
+            const consoleBox = document.getElementById('consoleOutput');
+            consoleBox.innerText = '> ' + cmd + '\nدر حال اجرا روی ویندوز...';
+
+            try {
+                const res = await fetch(host + '/api/exec', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({command: cmd}),
+                    mode: 'cors'
+                });
+                const data = await res.json();
+                let out = data.stdout || data.stderr || 'دستور با موفقیت بدون خروجی اجرا شد.';
+                consoleBox.innerText = '> ' + cmd + '\n' + out;
+                setOnline(true);
+            } catch(e) {
+                consoleBox.innerText = 'خطا در ارتباط با کامپیوتر: ' + e;
+                setOnline(false);
+            }
+        }
+
+        function runQuick(cmd) {
+            document.getElementById('termCmd').value = cmd;
+            executeCommand(cmd);
+        }
+
+        window.onload = () => {
+            const saved = localStorage.getItem('grok_host');
+            if (saved) document.getElementById('hostUrl').value = saved;
+            fetchStats();
+        };
+    </script>
+</body>
+</html>
