@@ -33,54 +33,106 @@
             position: sticky; top: 0; z-index: 100;
             background: rgba(9, 13, 22, 0.95);
             backdrop-filter: blur(16px);
-            padding: 16px 20px;
+            padding: 14px 20px;
             border-bottom: 1px solid var(--border);
             display: flex; justify-content: space-between; align-items: center;
         }
-        .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 17px; }
-        .logo-tag { background: var(--accent-gradient); padding: 4px 10px; border-radius: 8px; font-size: 12px; }
-        .conn-pill { font-size: 12px; padding: 5px 12px; border-radius: 20px; display: flex; align-items: center; gap: 6px; }
+        .logo { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 16px; }
+        .logo-tag { background: var(--accent-gradient); padding: 4px 8px; border-radius: 8px; font-size: 11px; }
+        .conn-pill { font-size: 12px; padding: 4px 10px; border-radius: 20px; display: flex; align-items: center; gap: 6px; }
         .online { background: rgba(16, 185, 129, 0.12); color: var(--green); border: 1px solid rgba(16, 185, 129, 0.3); }
         .offline { background: rgba(239, 68, 68, 0.12); color: var(--red); border: 1px solid rgba(239, 68, 68, 0.3); }
         .dot { width: 8px; height: 8px; border-radius: 50%; }
         .dot-green { background: var(--green); box-shadow: 0 0 8px var(--green); }
         .dot-red { background: var(--red); }
 
-        .container { padding: 16px; display: flex; flex-direction: column; gap: 16px; max-width: 600px; margin: 0 auto; }
+        .container { padding: 14px; display: flex; flex-direction: column; gap: 14px; max-width: 600px; margin: 0 auto; }
 
         .card {
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 18px;
-            padding: 16px;
+            border-radius: 16px;
+            padding: 14px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .card-title { font-size: 14px; font-weight: 700; color: var(--text); }
+
+        /* Remote Approval Bar */
+        .approval-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .btn-approve {
+            background: linear-gradient(135deg, #059669, #10b981);
+            border: none; color: white; padding: 14px 10px; border-radius: 12px;
+            font-size: 13px; font-weight: 700; cursor: pointer; display: flex;
+            align-items: center; justify-content: center; gap: 8px;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+        .btn-reject {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5; padding: 14px 10px; border-radius: 12px;
+            font-size: 13px; font-weight: 700; cursor: pointer; display: flex;
+            align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn-approve:active, .btn-reject:active { transform: scale(0.96); }
+
+        /* Interactive Screen Container */
+        .screen-wrapper {
+            position: relative;
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            margin-top: 10px;
+            background: #000;
+            touch-action: manipulation;
+        }
+        .screen-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+        .touch-dot {
+            position: absolute;
+            width: 24px; height: 24px;
+            background: rgba(56, 189, 248, 0.7);
+            border: 2px solid white;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            animation: pulse-click 0.5s forwards;
+        }
+        @keyframes pulse-click {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1.6); opacity: 0; }
+        }
+
+        .screen-tools {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-top: 8px; font-size: 12px; color: var(--dim);
+        }
+        .btn-pill {
+            background: rgba(255, 255, 255, 0.08); border: 1px solid var(--border);
+            color: var(--text); padding: 6px 12px; border-radius: 14px;
+            font-size: 11px; cursor: pointer; display: flex; align-items: center; gap: 4px;
+        }
 
         /* Quick Actions Grid */
         .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
         .btn-action {
             background: rgba(56, 189, 248, 0.08);
             border: 1px solid rgba(56, 189, 248, 0.15);
-            color: var(--text);
-            border-radius: 14px;
-            padding: 14px 6px;
+            color: var(--text); border-radius: 14px; padding: 12px 6px;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            gap: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: center;
+            gap: 6px; font-size: 11px; font-weight: 600; cursor: pointer; text-align: center;
         }
         .btn-action:active { transform: scale(0.95); background: rgba(56, 189, 248, 0.25); }
-        .btn-action span.icon { font-size: 24px; }
+        .btn-action span.icon { font-size: 22px; }
 
         /* Host Settings Box */
-        .settings-bar {
-            display: flex; gap: 8px; margin-top: 6px;
-        }
+        .settings-bar { display: flex; gap: 8px; margin-top: 6px; }
         .settings-input {
             flex: 1; background: rgba(0,0,0,0.4); border: 1px solid var(--border);
             border-radius: 10px; padding: 10px 14px; color: var(--accent); font-size: 13px;
@@ -90,12 +142,6 @@
             background: var(--accent-gradient); border: none; color: white;
             padding: 0 16px; border-radius: 10px; font-weight: 600; font-size: 13px; cursor: pointer;
         }
-
-        /* Stats Grid */
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .stat-box { background: rgba(0,0,0,0.25); padding: 12px; border-radius: 12px; border: 1px solid var(--border); }
-        .stat-label { font-size: 11px; color: var(--dim); margin-bottom: 4px; }
-        .stat-val { font-size: 15px; font-weight: 700; color: var(--accent); }
 
         /* Terminal box */
         .term-wrap { display: flex; gap: 8px; margin-top: 10px; }
@@ -111,11 +157,9 @@
         .console-out {
             margin-top: 10px; background: #030712; border-radius: 12px; padding: 14px;
             color: #a5f3fc; font-family: Consolas, monospace; font-size: 12px;
-            direction: ltr; text-align: left; max-height: 250px; overflow-y: auto;
+            direction: ltr; text-align: left; max-height: 200px; overflow-y: auto;
             white-space: pre-wrap; border: 1px solid rgba(255,255,255,0.06);
         }
-
-        .screen-img { width: 100%; border-radius: 12px; display: none; margin-top: 10px; border: 1px solid var(--border); }
 
         .toast {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
@@ -129,7 +173,7 @@
     <header>
         <div class="logo">
             <span class="logo-tag">Grok</span>
-            <span>کنترل کامپیوتر از گوشی</span>
+            <span>کنترل آنتی‌گراویتی از گوشی</span>
         </div>
         <div id="connPill" class="conn-pill offline">
             <span id="connDot" class="dot dot-red"></span>
@@ -138,32 +182,48 @@
     </header>
 
     <div class="container">
-        <!-- Host Address Settings -->
+        <!-- Interactive Screen & Approvals Card -->
         <div class="card">
             <div class="card-header">
-                <span class="card-title">🌐 آدرس اتصال به کامپیوتر</span>
+                <span class="card-title">🖥️ صفحه زنده آنتی‌گراویتی (لمسی)</span>
+                <span style="font-size:11px; color:var(--dim);">برای کلیک روی صفحه لمس کنید</span>
             </div>
-            <div class="settings-bar">
-                <input type="text" id="hostUrl" class="settings-input" value="http://172.25.189.99:5000">
-                <button class="btn-save" onclick="saveHost()">ذخیره</button>
+
+            <!-- Screen Viewport -->
+            <div id="screenWrapper" class="screen-wrapper" onclick="handleScreenClick(event)">
+                <img id="screenImg" class="screen-img" src="" alt="در حال بارگذاری مانیتور...">
+            </div>
+
+            <!-- Screen Controls -->
+            <div class="screen-tools">
+                <button class="btn-pill" onclick="fetchScreen()">🔄 تازه‌سازی تصویر</button>
+                <button id="liveBtn" class="btn-pill" onclick="toggleLive()">📡 پخش خودکار: خاموش</button>
+            </div>
+
+            <!-- 1-Tap Antigravity Approvals -->
+            <div class="approval-grid">
+                <button class="btn-approve" onclick="sendKey('ENTER')">
+                    <span>✅</span>
+                    <span>تایید اقدام (Proceed / Enter)</span>
+                </button>
+                <button class="btn-reject" onclick="sendKey('ESC')">
+                    <span>❌</span>
+                    <span>لغو (Cancel / Esc)</span>
+                </button>
             </div>
         </div>
 
         <!-- 1-Tap Quick Actions -->
         <div class="card">
             <div class="card-header">
-                <span class="card-title">⚡ اقدامات سریع با یک لمس</span>
+                <span class="card-title">⚡ اقدامات سریع</span>
             </div>
             <div class="grid-3">
-                <button class="btn-action" onclick="fetchScreen()">
-                    <span class="icon">📸</span>
-                    <span>اسکرین‌شات دسکتاپ</span>
-                </button>
                 <button class="btn-action" onclick="fetchStats()">
                     <span class="icon">📊</span>
                     <span>وضعیت سیستم</span>
                 </button>
-                <button class="btn-action" onclick="runQuick('Get-Process | Sort-Object CPU -Descending | Select-Object -First 6 ProcessName, CPU, WorkingSet')">
+                <button class="btn-action" onclick="runQuick('Get-Process | Sort-Object CPU -Descending | Select-Object -First 5 ProcessName, CPU')">
                     <span class="icon">⚙️</span>
                     <span>تسک‌های فعال</span>
                 </button>
@@ -171,60 +231,50 @@
                     <span class="icon">🔒</span>
                     <span>قفل ویندوز</span>
                 </button>
+                <button class="btn-action" onclick="sendKey('SPACE')">
+                    <span class="icon">⏸️</span>
+                    <span>کلید Space</span>
+                </button>
+                <button class="btn-action" onclick="sendKey('TAB')">
+                    <span class="icon">⇥</span>
+                    <span>کلید Tab</span>
+                </button>
                 <button class="btn-action" onclick="runQuick('dir C:\\Users\\Admin\\.gemini\\antigravity\\scratch')">
                     <span class="icon">📂</span>
                     <span>پروژه‌ها</span>
                 </button>
-                <button class="btn-action" onclick="runQuick('git status')">
-                    <span class="icon">🐙</span>
-                    <span>وضعیت Git</span>
-                </button>
             </div>
         </div>
 
-        <!-- Screenshot Modal/View -->
-        <div class="card" id="screenCard" style="display:none;">
-            <div class="card-header">
-                <span class="card-title">📸 تصویر زنده از مانیتور کامپیوتر</span>
-                <button onclick="document.getElementById('screenCard').style.display='none'" style="background:none;border:none;color:var(--dim);font-size:18px;">✕</button>
-            </div>
-            <img id="screenImg" class="screen-img" alt="اسکرین‌شات دسکتاپ">
-        </div>
-
-        <!-- System Stats Display -->
-        <div class="card" id="statsCard">
-            <div class="card-header">
-                <span class="card-title">💻 وضعیت سخت‌افزار ویندوز</span>
-            </div>
-            <div class="grid-2">
-                <div class="stat-box">
-                    <div class="stat-label">فضای دیسک آزاد</div>
-                    <div class="stat-val" id="statDisk">در حال دریافت...</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-label">سیستم‌عامل</div>
-                    <div class="stat-val" id="statOS" style="font-size:13px;">Windows 11</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- PowerShell Terminal Runner -->
+        <!-- Terminal Runner -->
         <div class="card">
             <div class="card-header">
-                <span class="card-title">⌨️ اجرای مستقیم فرامین شل (PowerShell)</span>
+                <span class="card-title">⌨️ اجرای مستقیم فرامین PowerShell</span>
             </div>
             <div class="term-wrap">
-                <input type="text" id="termCmd" class="term-input" placeholder="دستور مورد نظر (مثلاً: dir یا ipconfig)..." onkeydown="if(event.key==='Enter') executeCommand()">
+                <input type="text" id="termCmd" class="term-input" placeholder="دستور مورد نظر..." onkeydown="if(event.key==='Enter') executeCommand()">
                 <button class="term-btn" onclick="executeCommand()">اجرا</button>
             </div>
             <div id="consoleOutput" class="console-out">نتیجه فرامین در اینجا نمایش داده می‌شود...</div>
+        </div>
+
+        <!-- Host Settings -->
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">🌐 تنظیم آدرس اتصال کامپیوتر</span>
+            </div>
+            <div class="settings-bar">
+                <input type="text" id="hostUrl" class="settings-input" value="http://172.25.189.99:5000">
+                <button class="btn-save" onclick="saveHost()">ذخیره</button>
+            </div>
         </div>
     </div>
 
     <div id="toast" class="toast">پیام</div>
 
     <script>
-        // PWA Service Worker Registration
+        let liveInterval = null;
+
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('./sw.js').catch(() => {});
         }
@@ -237,14 +287,14 @@
             const h = document.getElementById('hostUrl').value.trim();
             localStorage.setItem('grok_host', h);
             showToast('آدرس جدید ذخیره شد!');
-            fetchStats();
+            fetchScreen();
         }
 
         function showToast(text) {
             const t = document.getElementById('toast');
             t.innerText = text;
             t.style.display = 'block';
-            setTimeout(() => { t.style.display = 'none'; }, 3000);
+            setTimeout(() => { t.style.display = 'none'; }, 2500);
         }
 
         function setOnline(isOnline) {
@@ -262,37 +312,80 @@
             }
         }
 
-        async function fetchStats() {
+        async function fetchScreen() {
             const host = getHost();
-            showToast('در حال بررسی اتصال به کامپیوتر...');
+            const img = document.getElementById('screenImg');
             try {
-                const res = await fetch(host + '/api/stats', { mode: 'cors' });
-                const data = await res.json();
-                document.getElementById('statDisk').innerText = data.disk.free_gb + ' گیگابایت';
-                document.getElementById('statOS').innerText = data.os;
-                setOnline(true);
-                showToast('سیستم متصل و آماده است ✅');
+                img.src = host + '/api/screenshot?t=' + Date.now();
+                img.onload = () => setOnline(true);
             } catch(e) {
                 setOnline(false);
-                showToast('کامپیوتر پاسخ نداد. آدرس را بررسی کنید');
             }
         }
 
-        async function fetchScreen() {
-            const host = getHost();
-            showToast('در حال ثبت تصویر دسکتاپ...');
+        function toggleLive() {
+            const btn = document.getElementById('liveBtn');
+            if (liveInterval) {
+                clearInterval(liveInterval);
+                liveInterval = null;
+                btn.innerText = '📡 پخش خودکار: خاموش';
+                btn.style.color = 'var(--text)';
+                showToast('پخش خودکار متوقف شد');
+            } else {
+                liveInterval = setInterval(fetchScreen, 3000);
+                btn.innerText = '🟢 پخش زنده فعال (۳ثانیه)';
+                btn.style.color = 'var(--green)';
+                showToast('پخش زنده فعال شد');
+            }
+        }
+
+        async function handleScreenClick(event) {
+            const wrapper = document.getElementById('screenWrapper');
+            const rect = wrapper.getBoundingClientRect();
+            const clickX = event.clientX - rect.left;
+            const clickY = event.clientY - rect.top;
+
+            const x_percent = (clickX / rect.width) * 100;
+            const y_percent = (clickY / rect.height) * 100;
+
+            // انیمیشن دایره لمسی در محل کلیک
+            const dot = document.createElement('div');
+            dot.className = 'touch-dot';
+            dot.style.left = clickX + 'px';
+            dot.style.top = clickY + 'px';
+            wrapper.appendChild(dot);
+            setTimeout(() => dot.remove(), 600);
+
+            showToast('کلیک ارسال شد 🖱️');
+
             try {
-                const card = document.getElementById('screenCard');
-                const img = document.getElementById('screenImg');
-                img.src = host + '/api/screenshot?t=' + Date.now();
-                img.onload = () => {
-                    card.style.display = 'block';
-                    img.style.display = 'block';
-                    setOnline(true);
-                    showToast('تصویر مانیتور کامپیوتر دریافت شد 📸');
-                };
+                const host = getHost();
+                await fetch(host + '/api/click', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({x_percent: x_percent, y_percent: y_percent}),
+                    mode: 'cors'
+                });
+                setTimeout(fetchScreen, 400);
             } catch(e) {
-                showToast('خطا در دریافت اسکرین‌شات');
+                showToast('خطا در ارسال کلیک');
+            }
+        }
+
+        async function sendKey(keyName) {
+            showToast('ارسال کلید ' + keyName + '...');
+            try {
+                const host = getHost();
+                await fetch(host + '/api/sendkey', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({key: keyName}),
+                    mode: 'cors'
+                });
+                showToast('کلید ' + keyName + ' اعمال شد ✅');
+                setTimeout(fetchScreen, 500);
+            } catch(e) {
+                showToast('خطا در ارسال کلید');
             }
         }
 
@@ -303,7 +396,7 @@
             if (!cmd) return;
 
             const consoleBox = document.getElementById('consoleOutput');
-            consoleBox.innerText = '> ' + cmd + '\nدر حال اجرا روی ویندوز...';
+            consoleBox.innerText = '> ' + cmd + '\nدر حال پردازش...';
 
             try {
                 const res = await fetch(host + '/api/exec', {
@@ -313,11 +406,11 @@
                     mode: 'cors'
                 });
                 const data = await res.json();
-                let out = data.stdout || data.stderr || 'دستور با موفقیت بدون خروجی اجرا شد.';
+                let out = data.stdout || data.stderr || 'بدون خروجی';
                 consoleBox.innerText = '> ' + cmd + '\n' + out;
                 setOnline(true);
             } catch(e) {
-                consoleBox.innerText = 'خطا در ارتباط با کامپیوتر: ' + e;
+                consoleBox.innerText = 'خطا در ارتباط: ' + e;
                 setOnline(false);
             }
         }
@@ -330,7 +423,7 @@
         window.onload = () => {
             const saved = localStorage.getItem('grok_host');
             if (saved) document.getElementById('hostUrl').value = saved;
-            fetchStats();
+            fetchScreen();
         };
     </script>
 </body>
